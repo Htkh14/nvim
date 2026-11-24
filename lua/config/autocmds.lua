@@ -38,3 +38,10 @@ if vim.env.KITTY_WINDOW_ID and vim.env.KITTY_LISTEN_ON then
     end,
   })
 end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "text", "gitcommit", "tex" },
+  callback = function()
+    vim.opt_local.spell = true
+  end,
+})

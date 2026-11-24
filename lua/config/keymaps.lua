@@ -40,3 +40,20 @@ end
 
 vim.keymap.set({ "n", "i" }, "<M-b>", toggle_blink, { desc = "Toggle blink completion" })
 vim.keymap.set({ "n", "i" }, "<M-c>", toggle_copilot, { desc = "Toggle Copilot ghost text" })
+
+local langs = { "en", "de", "en,de" } -- adjust to your languages
+
+vim.keymap.set("n", "<leader>uW", function()
+  vim.ui.select(langs, { prompt = "Spell language" }, function(choice)
+    if not choice then
+      return
+    end
+    vim.opt_local.spelllang = choice
+    vim.opt_local.spell = true
+    vim.notify("spelllang = " .. choice)
+  end)
+end, { desc = "Select spell language" })
+
+vim.keymap.set("n", "<leader>z", function()
+  Snacks.picker.spelling()
+end, { desc = "Spelling suggestions" })

@@ -6,3 +6,4 @@ vim.g.python3_host_prog = vim.fn.expand("~/.virtualenvs/neovim/bin/python")
 vim.g.maplocalleader = ","
 vim.g.vimtex_view_method = "zathura"
 vim.g.ai_cmp = false
+vim.opt.spelllang = { "en", "de" }
