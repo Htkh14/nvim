@@ -12,7 +12,7 @@ return {
         enabled = true,
         auto_trigger = true,
         keymap = {
-          accept = "<S-Tab>",
+          accept = false, -- handled by the unified <S-Tab> in keymaps.lua
           accept_word = "<M-w>",
           next = "<M-n>",
           prev = "<M-p>",
@@ -23,8 +23,8 @@ return {
         enabled = true,
         auto_trigger = true,
         keymap = {
-          accept_and_goto = "<M-g>",
-          accept = "<M-a>",
+          accept_and_goto = false, -- handled by the unified <S-Tab> in keymaps.lua
+          accept = false,
           dismiss = "<Esc>",
         },
       },

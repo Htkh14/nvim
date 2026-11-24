@@ -31,15 +31,48 @@ local function toggle_blink()
   vim.notify("blink.cmp: " .. (vim.g.blink_enabled == false and "off" or "on"))
 end
 
-local function toggle_copilot()
+local function toggle_copilot_ghost()
   local s = require("copilot.suggestion")
   s.toggle_auto_trigger()
   s.dismiss()
   vim.notify("Copilot ghost text toggled")
 end
 
+local copilot_off = false
+
+local function toggle_copilot()
+  copilot_off = not copilot_off
+  local sug_ok, sug = pcall(require, "copilot.suggestion")
+
+  if copilot_off then
+    if sug_ok then
+      pcall(sug.dismiss)
+      if sug.is_auto_trigger and sug.is_auto_trigger() then
+        pcall(sug.toggle_auto_trigger)
+      end
+    end
+    pcall(vim.cmd, "Copilot disable")
+    -- stop the NES client as well (client names can vary by version)
+    for _, c in ipairs(vim.lsp.get_clients()) do
+      if c.name:match("copilot") then
+        c:stop()
+      end
+    end
+  else
+    pcall(vim.cmd, "Copilot enable")
+    if sug_ok and sug.is_auto_trigger and not sug.is_auto_trigger() then
+      pcall(sug.toggle_auto_trigger)
+    end
+    pcall(vim.cmd, "Copilot attach")
+    vim.cmd("doautocmd FileType")
+  end
+
+  vim.notify("Copilot: " .. (copilot_off and "off" or "on"))
+end
+
 vim.keymap.set({ "n", "i" }, "<M-b>", toggle_blink, { desc = "Toggle blink completion" })
-vim.keymap.set({ "n", "i" }, "<M-c>", toggle_copilot, { desc = "Toggle Copilot ghost text" })
+vim.keymap.set({ "n", "i" }, "<M-g>", toggle_copilot_ghost, { desc = "Toggle Copilot ghost text" })
+vim.keymap.set({ "n", "i" }, "<M-c>", toggle_copilot, { desc = "Toggle Copilot entirely" })
 
 local langs = { "en", "de", "en,de" } -- adjust to your languages
 
